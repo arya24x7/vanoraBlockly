@@ -5,8 +5,8 @@
  */
 
 var MSG = {
-    title: "BDuino",
-    appName: "BlocklyDuino",
+    title: "Vanora",
+    appName: "Vanora Blockly",
     blocks: "Blocks",
     prog: "Program",
     catLogic: "Logic",
