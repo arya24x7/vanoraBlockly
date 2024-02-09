@@ -383,14 +383,5 @@
             </category>
         </category>
     </category>
-    <category name="%{BKY_CAT_SERVO}" categorystyle="servo_category">
-        <block type="servo_move">
-            <value name="DEGREE">
-                <shadow type="math_number">
-                    <field name="NUM">90</field>
-                </shadow>
-            </value>
-        </block>
-        <block type="servo_read_degrees"></block>
-    </category>
+    
 </xml>

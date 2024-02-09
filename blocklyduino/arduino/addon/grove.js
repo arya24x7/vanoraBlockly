@@ -193,65 +193,63 @@ Blockly.Arduino['grove_ultrasonic_ranger'] = function (block) {
 
 Blockly.Arduino['grove_motor_shield'] = function (block) {
     var dropdown_direction = block.getFieldValue('DIRECTION');
-    var speed = 127; //Blockly.Arduino.valueToCode(block, 'SPEED', Blockly.Arduino.ORDER_ATOMIC) || '127';
-    Blockly.Arduino.setups_["setup_motor"] = "pinMode(8,OUTPUT);//I1\n" +
-            "  pinMode(11,OUTPUT);//I2\n" +
-            "  pinMode(9,OUTPUT);//speedPinA\n" +
-            "  pinMode(12,OUTPUT);//I3\n" +
-            "  pinMode(13,OUTPUT);//i4\n" +
-            "  pinMode(10,OUTPUT);//speedPinB\n";
+    var speed = 128;
+    Blockly.Arduino.definitions_['include_cytron'] = '#include "CytronMotorDriver.h"\n';
+     //Blockly.Arduino.valueToCode(block, 'SPEED', Blockly.Arduino.ORDER_ATOMIC) || '127';
+    Blockly.Arduino.setups_["setup_motor"] = "CytronMD motor1(PWM_DIR, 3, 4);//I1\n" +
+            "  CytronMD motor2(PWM_DIR, 9, 10);\n" +
+            "  CytronMD motor3(PWM_DIR, 5, 7);\n" +
+            "  CytronMD motor4(PWM_DIR, 6, 8);\n" ;
+            
+            
     var code = "";
     if (dropdown_direction === "forward") {
+        speed = speed
         Blockly.Arduino.definitions_['define_forward'] = "void forward()\n" +
                 "{\n" +
-                "  analogWrite(9," + speed + ");//input a simulation value to set the speed\n" +
-                "  analogWrite(10," + speed + ");\n" +
-                "  digitalWrite(13,HIGH);//turn DC Motor B move clockwise\n" +
-                "  digitalWrite(12,LOW);\n" +
-                "  digitalWrite(11,LOW);//turn DC Motor A move anticlockwise\n" +
-                "  digitalWrite(8,HIGH);\n" +
+                "motor1.setSpeed("+speed+");\n" +
+                "motor2.setSpeed("+speed+");\n" +
+                "motor3.setSpeed("+speed+");\n" +
+                "motor4.setSpeed("+speed+");\n" +
                 "}\n";
         code = "forward();\n";
     } else if (dropdown_direction === "right") {
+        let right = -1 * speed;
         Blockly.Arduino.definitions_['define_right'] = "void right()\n" +
-                "{\n" +
-                "  analogWrite(9," + speed + ");//input a simulation value to set the speed\n" +
-                "  analogWrite(10," + speed + ");\n" +
-                "  digitalWrite(13,LOW);//turn DC Motor B move anticlockwise\n" +
-                "  digitalWrite(12,HIGH);\n" +
-                "  digitalWrite(11,LOW);//turn DC Motor A move anticlockwise\n" +
-                "  digitalWrite(8,HIGH);\n" +
-                "}\n\n";
+        "{\n" +
+        "motor1.setSpeed("+speed+");\n" +
+        "motor2.setSpeed("+right+");\n" +
+        "motor3.setSpeed("+right+");\n" +
+        "motor4.setSpeed("+speed+");\n" +
+        "}\n";
         code = "right();\n";
     } else if (dropdown_direction === "left") {
+        let left = -1 * speed;
         Blockly.Arduino.definitions_['define_left'] = "void left()\n" +
-                "{\n" +
-                "  analogWrite(9," + speed + ");//input a simulation value to set the speed\n" +
-                "  analogWrite(10," + speed + ");\n" +
-                "  digitalWrite(13,HIGH);//turn DC Motor B move clockwise\n" +
-                "  digitalWrite(12,LOW);\n" +
-                "  digitalWrite(11,HIGH);//turn DC Motor A move clockwise\n" +
-                "  digitalWrite(8,LOW);\n" +
-                "}\n\n";
+        "{\n" +
+        "motor1.setSpeed("+speed+");\n" +
+        "motor2.setSpeed("+left+");\n" +
+        "motor3.setSpeed("+left+");\n" +
+        "motor4.setSpeed("+speed+");\n" +
+        "}\n";
         code = "left();\n";
     } else if (dropdown_direction === "backward") {
         Blockly.Arduino.definitions_['define_backward'] = "void backward()\n" +
-                "{\n" +
-                "  analogWrite(9," + speed + ");//input a simulation value to set the speed\n" +
-                "  analogWrite(10," + speed + ");\n" +
-                "  digitalWrite(13,LOW);//turn DC Motor B move anticlockwise\n" +
-                "  digitalWrite(12,HIGH);\n" +
-                "  digitalWrite(11,HIGH);//turn DC Motor A move clockwise\n" +
-                "  digitalWrite(8,LOW);\n" +
-                "}\n\n";
+        "{\n" +
+        "motor1.setSpeed(-"+speed+");\n" +
+        "motor2.setSpeed(-"+speed+");\n" +
+        "motor3.setSpeed(-"+speed+");\n" +
+        "motor4.setSpeed(-"+speed+");\n" +
+        "}\n";
         code = "backward();\n";
     } else if (dropdown_direction === "stop") {
         Blockly.Arduino.definitions_['define_stop'] = "void stop()\n" +
-                "{\n" +
-                "digitalWrite(9,LOW);// Unenble the pin, to stop the motor. block should be done to avid damaging the motor.\n" +
-                "digitalWrite(10,LOW);\n" +
-                "delay(1000);\n" +
-                "}\n\n"
+        "{\n" +
+        "motor1.setSpeed(0);\n" +
+        "motor2.setSpeed(0);\n" +
+        "motor3.setSpeed(0);\n" +
+        "motor4.setSpeed(0);\n" +
+        "}\n";
         code = "stop();\n";
     }
     return code;
